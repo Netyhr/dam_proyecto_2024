@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "165372666945",
+    "project_id": "dam2024-contreras-proyecto",
+    "storage_bucket": "dam2024-contreras-proyecto.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:165372666945:android:d60c437028dcfa8e1512c0",
+        "android_client_info": {
+          "package_name": "com.dam2024.contreras.proyecto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgTvA7y1yNydDAiGkgBxJYEBMFDpT6h-4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
