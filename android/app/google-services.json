@@ -12,7 +12,12 @@
           "package_name": "com.dam2024.contreras.proyecto"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "165372666945-7sa7ef0pjp8p2k9ooth0lvo5ml1tv4bf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAgTvA7y1yNydDAiGkgBxJYEBMFDpT6h-4"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "165372666945-7sa7ef0pjp8p2k9ooth0lvo5ml1tv4bf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
