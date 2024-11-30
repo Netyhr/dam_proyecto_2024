@@ -15,32 +15,29 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentPageIndex = 0;
 
+  final List<String> appBarTitles = [
+    'Recetas',
+    'Categorías',
+  ];
+
   final List<Widget> pages = [
     RecipesPage(),
     CategoriesPage(),
   ];
 
-  // Future<void> _signOut(BuildContext context) async {
-  //   await FirebaseAuth.instance.signOut();
-  //   Navigator.pushReplacement(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => LoginPage()),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reshi'),
+        title: Text(appBarTitles[currentPageIndex]),
         centerTitle: true,
         flexibleSpace: Container(
-          decoration: BoxDecoration(color: Colors.green.shade100),
+          decoration: BoxDecoration(color: Colors.green.shade50),
         ),
       ),
       drawer: Drawer(
         child: Container(
-          color: Colors.green.shade100,
+          color: Colors.green.shade50,
           width: double.infinity,
           height: double.infinity,
           child: SafeArea(
@@ -65,7 +62,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: SafeArea(
         child: Container(
-          color: Colors.green.shade100,
+          color: Colors.green.shade50,
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
@@ -84,7 +81,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.green.shade100,
+        backgroundColor: Colors.green.shade50,
         fixedColor: Colors.brown.shade800,
         iconSize: 24,
         items: [
