@@ -1,16 +1,10 @@
-# dam_proyecto_2024
+# Proyecto Final de Desarrollo de Aplicaciones Móviles
 
-A new Flutter project.
+Este repositorio contiene una aplicación móvil hecha con Flutter y utizando Firebase como API.
 
-## Getting Started
+## Presentando a Reshi
+<div align="center" style="margin-top: 20px; margin-bottom: 20px;">
+    <img src="assets/images/logo.webp" alt="Logo de Reshi" width="300" />
+</div>
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Reshi es una aplicación móvil que permite al usuario ver, ingresar y eliminar recetas.
