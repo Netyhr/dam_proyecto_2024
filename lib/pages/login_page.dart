@@ -21,22 +21,49 @@ class _LoginPageState extends State<LoginPage> {
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        color: Colors.white,
-        child: Column(
-          children: [
-            Container(
-              height: 400,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20))),
-            ),
-            Container(
-                margin: EdgeInsets.only(top: 20),
-                child: SignUpWithGoogleButtonWidget())
-          ],
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.green.shade600,
+              Colors.green.shade300,
+              Colors.yellow.shade200
+            ],
+            begin: Alignment.bottomLeft,
+            end: Alignment.topRight,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 40.0),
+                child: Text(
+                  '¡Bienvenido a Reshi!',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32.0,
+                      color: Colors.brown.shade900,
+                      shadows: [
+                        Shadow(
+                            offset: Offset(-2.0, 2.0),
+                            blurRadius: 10.0,
+                            color: const Color.fromARGB(85, 35, 31, 36)),
+                      ]),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 40.0),
+                width: 300,
+                child: Image.asset(
+                  'assets/images/logo.webp',
+                ),
+              ),
+              Container(
+                  margin: EdgeInsets.only(top: 40.0, bottom: 40.0),
+                  child: SignUpWithGoogleButtonWidget())
+            ],
+          ),
         ),
       ),
     );
@@ -61,17 +88,17 @@ class SignUpWithGoogleButtonWidget extends StatelessWidget {
       },
       icon: Icon(
         MdiIcons.google,
-        size: 36,
+        size: 24,
       ),
       style: ElevatedButton.styleFrom(
-        fixedSize: Size(300, 100),
+        padding: EdgeInsets.all(20.0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
       label: Padding(
-        padding: const EdgeInsets.only(left: 10),
+        padding: EdgeInsets.only(left: 10),
         child: Text(
           'Iniciar sesión con Google',
-          style: TextStyle(fontSize: 24),
+          style: TextStyle(fontSize: 16),
         ),
       ),
     );
