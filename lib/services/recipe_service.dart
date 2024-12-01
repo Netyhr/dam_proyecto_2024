@@ -9,6 +9,21 @@ class RecipeService {
     return _firestore.collection('Recetas').snapshots();
   }
 
+  Stream<QuerySnapshot> getAllRecipesByCategory(categoryId) {
+    return _firestore
+        .collection('Recetas')
+        .where('categoria', isEqualTo: categoryId)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getUserRecipesByCategory(categoryId) {
+    return _firestore
+        .collection('Recetas')
+        .where('categoria', isEqualTo: categoryId)
+        .where('autor', isEqualTo: _currentUserId)
+        .snapshots();
+  }
+
   Stream<QuerySnapshot> getUserRecipes() {
     return _firestore
         .collection('Recetas')

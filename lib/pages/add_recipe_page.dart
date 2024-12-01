@@ -116,8 +116,8 @@ class _AddRecipePageState extends State<AddRecipePage> {
                       if (_formKey.currentState!.validate()) {
                         try {
                           bool success = await _recipeService.addRecipe(
-                              name: _nameController.text,
-                              instructions: _instructionsController.text,
+                              name: _nameController.text.trim(),
+                              instructions: _instructionsController.text.trim(),
                               categoryId: _selectedCategory.toString());
 
                           if (success) {

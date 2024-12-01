@@ -20,10 +20,8 @@ class RecipeDetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           recipe['nombre'],
-          style: TextStyle(color: Colors.brown.shade800),
         ),
-        iconTheme: IconThemeData(color: Colors.brown.shade800),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.green.shade200,
         elevation: 1,
       ),
       body: SingleChildScrollView(
@@ -86,7 +84,7 @@ class RecipeDetailsPage extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
+                    padding: EdgeInsets.only(top: 16.0),
                     child: Text(
                       'Instrucciones',
                       style: TextStyle(
@@ -97,7 +95,7 @@ class RecipeDetailsPage extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
+                    padding: EdgeInsets.only(top: 8.0),
                     child: Text(
                       recipe['instrucciones'] ??
                           'No hay instrucciones disponibles.',
