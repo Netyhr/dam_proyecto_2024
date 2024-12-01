@@ -1,3 +1,4 @@
+import 'package:dam_proyecto_2024/pages/add_recipe_page.dart';
 import 'package:dam_proyecto_2024/pages/categories_page.dart';
 import 'package:dam_proyecto_2024/pages/login_page.dart';
 import 'package:dam_proyecto_2024/pages/recipes_page.dart';
@@ -32,41 +33,54 @@ class _HomePageState extends State<HomePage> {
         title: Text(appBarTitles[currentPageIndex]),
         centerTitle: true,
         flexibleSpace: Container(
-          decoration: BoxDecoration(color: Colors.green.shade50),
+          decoration: BoxDecoration(color: Colors.green.shade200),
         ),
-      ),
-      drawer: Drawer(
-        child: Container(
-          color: Colors.green.shade50,
-          width: double.infinity,
-          height: double.infinity,
-          child: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                TextButton.icon(
-                  onPressed: () async => {
-                    await signOut(),
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
-                    )
+        actions: [
+          IconButton(
+              icon: Icon(MdiIcons.exitToApp),
+              onPressed: () async {
+                return showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('¿Cerrar sesión?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('No'),
+                        ),
+                        TextButton(
+                          onPressed: () async => {
+                            await signOut(),
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()),
+                                (Route<dynamic> route) => false)
+                            // Navigator.pushReplacement(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => LoginPage()),
+                            // )
+                          },
+                          child: Text('Si'),
+                        ),
+                      ],
+                    );
                   },
-                  icon: Icon(MdiIcons.exitToApp),
-                  label: Text('Cerrar sesión'),
-                )
-              ],
-            ),
-          ),
-        ),
+                );
+              }),
+        ],
       ),
       body: SafeArea(
         child: Container(
-          color: Colors.green.shade50,
+          color: Colors.green.shade200,
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.yellow.shade50,
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             child: pages[currentPageIndex],
@@ -74,14 +88,20 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddRecipePage(),
+              ));
+        },
         shape: CircleBorder(),
         child: Icon(MdiIcons.plus),
         backgroundColor: Colors.redAccent,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.green.shade50,
+        backgroundColor: Colors.green.shade200,
         fixedColor: Colors.brown.shade800,
         iconSize: 24,
         items: [
