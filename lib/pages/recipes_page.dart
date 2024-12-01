@@ -1,10 +1,10 @@
-// lib/pages/recipes_page.dart
-
-import 'package:dam_proyecto_2024/pages/recipe_details_page.dart';
+import 'package:dam_proyecto_2024/widgets/recipe_card.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../services/recipe_service.dart';
+import '../services/category_service.dart';
 
 class RecipesPage extends StatefulWidget {
   const RecipesPage({Key? key}) : super(key: key);
@@ -16,21 +16,25 @@ class RecipesPage extends StatefulWidget {
 class _RecipesPageState extends State<RecipesPage> {
   bool _showOnlyMyRecipes = false;
   final RecipeService _recipeService = RecipeService();
+  final CategoryService _categoryService = CategoryService();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(
-                'Mis recetas',
-                style: TextStyle(
-                  color: Colors.brown.shade800,
-                  fontWeight: FontWeight.w500,
+              Padding(
+                padding: EdgeInsets.only(right: 8.0),
+                child: Text(
+                  'Mis recetas',
+                  style: TextStyle(
+                    color: Colors.brown.shade800,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
               Switch(
@@ -40,7 +44,6 @@ class _RecipesPageState extends State<RecipesPage> {
                     _showOnlyMyRecipes = value;
                   });
                 },
-                inactiveThumbColor: Colors.brown.shade200,
                 activeColor: Colors.redAccent,
               ),
             ],
@@ -61,8 +64,9 @@ class _RecipesPageState extends State<RecipesPage> {
                 );
               }
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+              if (!snapshot.hasData ||
+                  snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
               }
 
               final recipes = snapshot.data?.docs ?? [];
@@ -79,10 +83,11 @@ class _RecipesPageState extends State<RecipesPage> {
               }
 
               return ListView.builder(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0),
                 itemCount: recipes.length,
                 itemBuilder: (context, index) {
                   final recipe = recipes[index].data() as Map<String, dynamic>;
+                  final recipeId = recipes[index].id;
 
                   return FutureBuilder<DocumentSnapshot>(
                     future: _recipeService.getUserById(recipe['autor']),
@@ -90,8 +95,8 @@ class _RecipesPageState extends State<RecipesPage> {
                       final authorName = authorSnapshot.data?.get('nombre') ??
                           'Usuario desconocido';
                       return FutureBuilder(
-                        future:
-                            _recipeService.getCategoryById(recipe['categoria']),
+                        future: _categoryService
+                            .getCategoryById(recipe['categoria']),
                         builder: (context, categorySnapshot) {
                           final categoryImage =
                               categorySnapshot.data?.get('foto') ?? 'none';
@@ -99,11 +104,59 @@ class _RecipesPageState extends State<RecipesPage> {
                               categorySnapshot.data?.get('nombre') ??
                                   'Categoría desconocida';
 
-                          return RecipeCard(
-                            recipe: recipe,
-                            authorName: authorName,
-                            categoryName: categoryName,
-                            categoryImage: categoryImage,
+                          return FutureBuilder(
+                            future: _recipeService.checkAuthor(recipeId),
+                            builder: (context, isAuthorSnapshot) {
+                              final isAuthor = isAuthorSnapshot.data;
+
+                              if (!isAuthorSnapshot.hasData ||
+                                  isAuthorSnapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 90.0),
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
+                                );
+                              }
+                              if (isAuthor == false) {
+                                return RecipeCard(
+                                  recipe: recipe,
+                                  recipeId: recipeId,
+                                  authorName: authorName,
+                                  categoryName: categoryName,
+                                  categoryImage: categoryImage,
+                                );
+                              } else {
+                                return Slidable(
+                                  key: ValueKey(recipeId),
+                                  endActionPane: ActionPane(
+                                    motion: ScrollMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        onPressed: (context) async {
+                                          return showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return DeleteAlertDialog(
+                                                  context, recipeId);
+                                            },
+                                          );
+                                        },
+                                        icon: MdiIcons.trashCan,
+                                        label: 'Eliminar',
+                                        backgroundColor: Colors.yellow.shade50,
+                                      )
+                                    ],
+                                  ),
+                                  child: RecipeCard(
+                                      recipe: recipe,
+                                      recipeId: recipeId,
+                                      authorName: authorName,
+                                      categoryName: categoryName,
+                                      categoryImage: categoryImage),
+                                );
+                              }
+                            },
                           );
                         },
                       );
@@ -117,112 +170,39 @@ class _RecipesPageState extends State<RecipesPage> {
       ],
     );
   }
-}
 
-class RecipeCard extends StatelessWidget {
-  const RecipeCard({
-    super.key,
-    required this.recipe,
-    required this.authorName,
-    required this.categoryName,
-    required this.categoryImage,
-  });
+  AlertDialog DeleteAlertDialog(BuildContext context, String recipeId) {
+    return AlertDialog(
+      title: Text('Eliminar receta'),
+      content: Text('¿Estás seguro de que quieres eliminar esta receta?'),
+      actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Cancelar')),
+        TextButton(
+          onPressed: () async {
+            bool? confirmDelete = await RecipeService().deleteRecipe(recipeId);
 
-  final Map<String, dynamic> recipe;
-  final dynamic authorName;
-  final dynamic categoryName;
-  final dynamic categoryImage;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      margin: EdgeInsets.only(bottom: 12.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => RecipeDetailsPage(
-                  recipe: recipe,
-                  authorName: authorName,
-                  categoryName: categoryName,
-                  categoryImage: categoryImage,
-                ),
+            if (confirmDelete) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Receta eliminada con éxito.'),
+                backgroundColor: Colors.green,
               ));
-        },
-        borderRadius: BorderRadius.circular(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(10),
-              ),
-              child: Image.asset(
-                'assets/images/categories/' + categoryImage + '.webp',
-                width: double.infinity,
-                height: 150,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    recipe['nombre'],
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.brown.shade800,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 4.0),
-                    child: Row(
-                      children: [
-                        Icon(
-                          MdiIcons.account,
-                          size: 16,
-                          color: Colors.grey.shade600,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 4.0),
-                          child: Text(
-                            authorName,
-                            style: TextStyle(color: Colors.grey.shade600),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        MdiIcons.food,
-                        size: 16,
-                        color: Colors.grey.shade600,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 4.0),
-                        child: Text(
-                          categoryName,
-                          style: TextStyle(color: Colors.grey.shade600),
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ],
+              Navigator.pop(context);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content:
+                    Text('No puedes eliminar una receta que no te pertenece.'),
+                backgroundColor: Colors.redAccent,
+              ));
+              Navigator.pop(context);
+            }
+          },
+          child: Text('Aceptar'),
         ),
-      ),
+      ],
     );
   }
 }

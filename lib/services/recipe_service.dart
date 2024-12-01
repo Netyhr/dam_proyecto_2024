@@ -20,7 +20,41 @@ class RecipeService {
     return _firestore.collection('Usuarios').doc(userId).get();
   }
 
-  Future<DocumentSnapshot> getCategoryById(String categoryId) {
-    return _firestore.collection('Categorias').doc(categoryId).get();
+  Future<bool> addRecipe(
+      {required String name,
+      required String categoryId,
+      required String instructions}) async {
+    try {
+      await _firestore.collection('Recetas').add({
+        'autor': _currentUserId,
+        'nombre': name,
+        'categoria': categoryId,
+        'instrucciones': instructions,
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> checkAuthor(String recipeId) async {
+    final author = await _firestore.collection('Recetas').doc(recipeId).get();
+
+    if (_currentUserId == author['autor']) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> deleteRecipe(String recipeId) async {
+    final author = await _firestore.collection('Recetas').doc(recipeId).get();
+
+    if (_currentUserId == author['autor']) {
+      await _firestore.collection('Recetas').doc(recipeId).delete();
+      return true;
+    } else {
+      return false;
+    }
   }
 }
