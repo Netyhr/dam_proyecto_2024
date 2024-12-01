@@ -7,7 +7,7 @@ class MyTheme {
     brightness: Brightness.light,
     colorScheme: ColorScheme.light(
       primary: Colors.green,
-      secondary: Colors.red,
+      secondary: Colors.redAccent,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
@@ -20,7 +20,7 @@ class MyTheme {
     ),
     textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(
-        foregroundColor: WidgetStateProperty.all(Colors.brown.shade700),
+        foregroundColor: WidgetStateProperty.all(Colors.brown.shade800),
       ),
     ),
   );
